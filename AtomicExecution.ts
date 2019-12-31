@@ -16,7 +16,7 @@ function start() {
     operationParent();
   } catch (e) {
     rollbackOperation(startValue);
-    console.log(e);
+    console.log(e.message);
     console.log(`Value reset to ${operationValue.toString()}!`);
   }
 }
@@ -25,7 +25,9 @@ function operationParent() {
   const randomNumber = RandomNumber(10);
   operationValue = +randomNumber;
   if (operationValue > 5) {
-    throw `${operationValue.toString()} more than 5, revert operation!`;
+    throw new Error(
+      `${operationValue.toString()} more than 5, revert operation!`
+    );
   } else {
     console.log(`${operationValue.toString()} is less than 6.`);
     operationChild();
@@ -40,7 +42,9 @@ function operationChild() {
     );
     console.log(`${operationValue.toString()} passed all conditions!`);
   } else {
-    throw `${operationValue.toString()} is not divisible by ${divisibleBy.toString()}, revert operation!`;
+    throw new Error(
+      `${operationValue.toString()} is not divisible by ${divisibleBy.toString()}, revert operation!`
+    );
   }
 }
 
