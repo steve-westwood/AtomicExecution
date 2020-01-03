@@ -1,5 +1,11 @@
 let operationValue: number = 0;
 
+class CustomError extends Error {
+  constructor(message?: string) {
+    super(message);
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
 function rollbackOperation(initialValue: number) {
   operationValue = initialValue;
 }
@@ -16,6 +22,9 @@ function start() {
     operationParent();
   } catch (e) {
     rollbackOperation(startValue);
+    if (e instanceof CustomError) {
+      console.log("Is CustomError");
+    }
     console.log(e.message);
     console.log(`Value reset to ${operationValue.toString()}!`);
   }
@@ -25,7 +34,7 @@ function operationParent() {
   const randomNumber = RandomNumber(10);
   operationValue = +randomNumber;
   if (operationValue > 5) {
-    throw new Error(
+    throw new CustomError(
       `${operationValue.toString()} more than 5, revert operation!`
     );
   } else {
